@@ -553,7 +553,7 @@ function drawGiantPumpkin(c){
   c.beginPath(); c.moveTo(-r*.3,-r*.34); c.lineTo(-r*.12,-r*.1); c.lineTo(-r*.44,-r*.1); c.closePath(); c.fill();
   c.beginPath(); c.moveTo(r*.3,-r*.34); c.lineTo(r*.12,-r*.1); c.lineTo(r*.44,-r*.1); c.closePath(); c.fill();
   c.beginPath();
-  c.moveTo(-r*.42,r*.28); c.quadraticTo(0,r*.62,r*.42,r*.28);
+  c.moveTo(-r*.42,r*.28); c.quadraticCurveTo(0,r*.62,r*.42,r*.28);
   c.lineTo(r*.28,r*.42); c.lineTo(r*.14,r*.24); c.lineTo(0,r*.42);
   c.lineTo(-r*.14,r*.24); c.lineTo(-r*.28,r*.42); c.closePath(); c.fill();
   c.shadowBlur=0;
@@ -589,7 +589,7 @@ function drawCannon(c){
   c.fillStyle='#2b1500';
   c.beginPath(); c.moveTo(-5,-102); c.lineTo(-2,-96); c.lineTo(-8,-96); c.closePath(); c.fill();
   c.beginPath(); c.moveTo(5,-102); c.lineTo(2,-96); c.lineTo(8,-96); c.closePath(); c.fill();
-  c.beginPath(); c.moveTo(-7,-92); c.quadraticTo(0,-86); c.lineTo(7,-92); c.lineTo(4,-89); c.lineTo(0,-91); c.lineTo(-4,-89); c.closePath(); c.fill();
+  c.beginPath(); c.moveTo(-7,-92); c.quadraticCurveTo(0,-86); c.lineTo(7,-92); c.lineTo(4,-89); c.lineTo(0,-91); c.lineTo(-4,-89); c.closePath(); c.fill();
   c.restore();
   c.restore();
 }
@@ -613,7 +613,7 @@ function drawDeco(c,d){
     c.fillStyle='#2b1500';
     c.beginPath(); c.moveTo(-7,-4); c.lineTo(-2,2); c.lineTo(-9,2); c.closePath(); c.fill();
     c.beginPath(); c.moveTo(7,-4); c.lineTo(2,2); c.lineTo(9,2); c.closePath(); c.fill();
-    c.beginPath(); c.moveTo(-7,7); c.quadraticTo(0,12); c.lineTo(7,7); c.lineTo(4,9.5); c.lineTo(0,7.6); c.lineTo(-4,9.5); c.closePath(); c.fill();
+    c.beginPath(); c.moveTo(-7,7); c.quadraticCurveTo(0,12); c.lineTo(7,7); c.lineTo(4,9.5); c.lineTo(0,7.6); c.lineTo(-4,9.5); c.closePath(); c.fill();
     c.fillStyle='rgba(255,220,120,.95)';
     c.beginPath(); c.arc(-3.5,0,1.8,0,Math.PI*2); c.arc(3.5,0,1.8,0,Math.PI*2); c.fill();
   }
@@ -644,7 +644,7 @@ function drawCatBuild(c){
     c.fillStyle='#2b1500';
     c.beginPath(); c.moveTo(-6,-2); c.lineTo(-2,2); c.lineTo(-8,2); c.closePath(); c.fill();
     c.beginPath(); c.moveTo(6,-2); c.lineTo(2,2); c.lineTo(8,2); c.closePath(); c.fill();
-    c.beginPath(); c.moveTo(-6,6); c.quadraticTo(0,10); c.lineTo(6,6); c.lineTo(0,8); c.closePath(); c.fill();
+    c.beginPath(); c.moveTo(-6,6); c.quadraticCurveTo(0,10); c.lineTo(6,6); c.lineTo(0,8); c.closePath(); c.fill();
   } else if(cat.build==='ghost'){
     c.fillStyle='#e8e4ff';
     c.beginPath(); c.moveTo(-11,10); c.lineTo(-11,-3); c.arc(0,-3,11,Math.PI,0); c.lineTo(11,10);
@@ -680,7 +680,7 @@ function drawCat(c){
   c.beginPath(); c.moveTo(-11,-22); c.lineTo(-13,-37); c.lineTo(-3,-27); c.closePath(); c.fill();
   c.beginPath(); c.moveTo(11,-22); c.lineTo(13,-37); c.lineTo(3,-27); c.closePath(); c.fill();
   c.strokeStyle='#17121f'; c.lineWidth=5; c.lineCap='round';
-  c.beginPath(); c.moveTo(16,16); c.quadraticTo(36,10,32,-10+Math.sin(elapsed*3)*5); c.stroke();
+  c.beginPath(); c.moveTo(16,16); c.quadraticCurveTo(36,10,32,-10+Math.sin(elapsed*3)*5); c.stroke();
   if(cat.mode==='happy'){
     c.strokeStyle='#ffd34d'; c.lineWidth=2.4; c.lineCap='round';
     c.beginPath(); c.arc(-5,-16,4,Math.PI*1.15,Math.PI*1.85); c.stroke();
@@ -689,7 +689,7 @@ function drawCat(c){
     c.fillStyle='#ffe066';
     c.beginPath(); c.arc(-5,-16,2.6,0,Math.PI*2); c.arc(5,-16,2.6,0,Math.PI*2); c.fill();
     c.strokeStyle='#ffe066'; c.lineWidth=2;
-    c.beginPath(); c.moveTo(-6,-8); c.quadraticTo(0,-2); c.lineTo(6,-8); c.stroke();
+    c.beginPath(); c.moveTo(-6,-8); c.quadraticCurveTo(0,-2); c.lineTo(6,-8); c.stroke();
   } else {
     c.fillStyle='#7dff8a';
     c.beginPath(); c.arc(-5,-16,2.4,0,Math.PI*2); c.arc(5,-16,2.4,0,Math.PI*2); c.fill();
