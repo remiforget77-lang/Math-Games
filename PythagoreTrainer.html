@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Table de Pythagore</title>
+<style>
+  :root{
+    --bg1:#0e1834; --bg2:#1c2c58; --cream:#fdf8ee;
+    --red:#c0392b; --green:#1e5631; --gold:#e8b923;
+    --ink:#243043; --muted:#7b8794;
+    --rod:#8a5a2b; --rod2:#6b4420;
+    --blue:#2e86de; --blue-soft:#d6e9fb;
+    --orange:#f39c12;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  body{
+    font-family:"Trebuchet MS","Segoe UI",system-ui,sans-serif;
+    background:radial-gradient(circle at 50% 0%,var(--bg2),var(--bg1) 75%);
+    min-height:100vh;display:flex;justify-content:center;align-items:flex-start;
+    padding:14px;color:var(--ink);
+  }
+  .wrap{width:100%;max-width:1060px;background:var(--cream);border-radius:18px;padding:14px 16px;box-shadow:0 14px 40px rgba(0,0,0,.5)}
+
+  /* top bar */
+  .topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px;flex-wrap:wrap}
+  h1{font-size:1.15rem;color:var(--red)}
+  .top-right{display:flex;align-items:center;gap:8px}
+  .pill{background:var(--gold);color:#5a4200;font-weight:bold;font-size:.9rem;padding:5px 12px;border-radius:20px;white-space:nowrap}
+  .icon-btn{width:34px;height:34px;border-radius:50%;border:none;cursor:pointer;background:#e6ddcb;color:#6b6152;font-size:1rem;display:flex;align-items:center;justify-content:center}
+  .icon-btn:hover{background:#dcd2bd}
+  .lang{display:flex;background:#e6ddcb;border-radius:20px;padding:3px;gap:2px}
+  .lang button{border:none;background:none;padding:4px 10px;border-radius:16px;font-weight:bold;font-family:inherit;color:#8a7f6a;cursor:pointer}
+  .lang button.on{background:var(--green);color:#fff}
+
+  /* mode tabs */
+  .modes{display:flex;gap:8px;justify-content:center;margin-bottom:10px}
+  .mode-btn{padding:8px 22px;font-size:.95rem;font-weight:bold;font-family:inherit;border:2px solid #cfc3a8;border-radius:20px;background:#fff;color:#9a8f78;cursor:pointer;transition:all .15s}
+  .mode-btn.on{background:var(--green);border-color:var(--green);color:#fff}
+  .mode-btn:hover{transform:scale(1.04)}
+
+  /* question row (quiz) */
+  .q-row{display:flex;align-items:center;justify-content:center;gap:14px;background:#fff;border:2px solid #eadfc8;border-radius:14px;padding:10px 14px;margin-bottom:12px;flex-wrap:wrap}
+  .eq{font-size:2.4rem;font-weight:bold;color:var(--red);letter-spacing:2px}
+  .ans-box{min-width:110px;height:58px;border-radius:10px;background:#fff8e6;border:2px dashed #d9c48a;display:flex;align-items:center;justify-content:center;font-size:2.1rem;font-weight:bold;color:var(--ink)}
+  .ans-box.good{border:2px solid var(--green);background:#e7f6ea;animation:bump .4s}
+  .ans-box.bad{border:2px solid var(--red);background:#fdeaea;animation:shake .4s}
+  @keyframes bump{50%{transform:scale(1.1)}}
+  @keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+  .feedback{min-width:230px;max-width:340px;text-align:center;font-size:1rem;font-weight:bold;line-height:1.35}
+  .feedback.ok{color:var(--green)}
+  .feedback.no{color:var(--red)}
+  .q-tools{display:flex;gap:8px}
+  .tool-btn{padding:10px 14px;font-size:1rem;font-weight:bold;font-family:inherit;border:2px solid #cfc3a8;border-radius:12px;background:#fff;color:#6b6152;cursor:pointer;transition:.15s}
+  .tool-btn:hover{transform:scale(1.05);border-color:var(--gold)}
+  .tool-btn.next{background:linear-gradient(180deg,#d4483a,#a8301f);color:#fff;border-color:#a8301f}
+  .hidden{display:none !important}
+
+  /* picker row (free) */
+  .picker-row{display:flex;align-items:center;justify-content:center;gap:10px;background:#fff;border:2px solid #eadfc8;border-radius:14px;padding:10px 14px;margin-bottom:12px;flex-wrap:wrap}
+  .picker-row label{font-weight:bold;color:var(--muted);font-size:.9rem}
+  .val-btn{width:40px;height:40px;font-size:1.1rem;font-weight:bold;font-family:inherit;border:2px solid #cfc3a8;border-radius:8px;background:#fff;color:#6b6152;cursor:pointer;transition:all .12s}
+  .val-btn:hover{transform:scale(1.1)}
+  .val-btn.sel-a{background:var(--blue);border-color:var(--blue);color:#fff}
+  .val-btn.sel-b{background:var(--orange);border-color:var(--orange);color:#fff}
+  .free-eq{font-size:1.6rem;font-weight:bold;color:var(--red);min-width:190px;text-align:center}
+  .free-note{font-size:.8rem;color:#8a7a50;width:100%;text-align:center}
+
+  /* layout */
+  .main{display:flex;gap:14px;align-items:stretch}
+  .col-table{flex:1.5;min-width:0}
+  .col-side{flex:1;min-width:280px;display:flex;flex-direction:column;gap:10px}
+  .panel{background:#fff;border:2px solid #eadfc8;border-radius:14px;padding:10px}
+  .panel-title{font-size:.75rem;color:var(--muted);font-weight:bold;text-transform:uppercase;letter-spacing:.6px;margin-bottom:6px;display:flex;justify-content:space-between;align-items:center;gap:6px}
+  .panel-title .tag{font-size:.8rem;background:#eef3fa;color:var(--blue);padding:2px 10px;border-radius:10px;text-transform:none;letter-spacing:0}
+
+  /* table */
+  .pifa-grid{max-width:540px;margin:0 auto;display:grid;grid-template-columns:repeat(13,1fr);gap:2px;background:#e3d9c6;padding:3px;border-radius:8px;user-select:none}
+  .pifa-cell{aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:.95rem;color:#44506a;background:#fff;border-radius:4px;cursor:pointer;transition:background .1s,transform .1s}
+  .pifa-cell:hover{background:#f2ede0;transform:scale(1.08);z-index:2}
+  .pifa-cell.head{background:var(--gold);color:#5a4200;cursor:default}
+  .pifa-cell.head:hover{transform:none;background:var(--gold)}
+  .pifa-cell.path{background:var(--blue-soft);color:#1c5a94}
+  .pifa-cell.head.path-a{background:var(--blue);color:#fff}
+  .pifa-cell.head.path-b{background:var(--orange);color:#fff}
+  .pifa-cell.target{background:#fff3c4;color:#b58a00;box-shadow:0 0 0 3px var(--gold);font-size:1.15rem;animation:pulse 1.4s ease-in-out infinite}
+  .pifa-cell.twin{background:#fffbe9;color:#c9a73a}
+  @keyframes pulse{50%{box-shadow:0 0 0 5px rgba(232,185,35,.55)}}
+  .pifa-cell.answer{background:var(--orange);color:#fff;animation:hitPop .3s cubic-bezier(.2,1.6,.5,1);box-shadow:0 0 0 3px #bde3ff}
+  @keyframes hitPop{from{transform:scale(.5)}to{transform:scale(1)}}
+  .pifa-cell.miss-flash{background:var(--red);color:#fff;box-shadow:0 0 0 3px #ffb3a7}
+  .pifa-cell.dbl{color:#a5433a}
+  .table-legend{margin-top:8px;text-align:center;font-size:.82rem;color:#8a7a50;line-height:1.45}
+  .swatch{display:inline-block;width:14px;height:14px;border-radius:3px;vertical-align:-2px;margin:0 3px}
+  .sw-blue{background:var(--blue-soft);border:1px solid var(--blue)}
+  .sw-orange{background:var(--orange)}
+  .sw-gold{background:#fff3c4;border:2px solid var(--gold)}
+
+  /* help panel */
+  .help-start{display:flex;flex-direction:column;align-items:center;gap:8px;padding:10px 4px;text-align:center}
+  .help-start p{font-size:.9rem;color:var(--muted);font-weight:bold}
+  .hint-btn{padding:12px 20px;font-size:1.05rem;font-weight:bold;font-family:inherit;border:none;border-radius:14px;background:linear-gradient(180deg,#ffe07a,var(--gold));color:#5a4200;cursor:pointer;box-shadow:0 3px 0 #b88f10}
+  .hint-btn:hover{filter:brightness(1.05)}
+  .strategy{background:#fff8e6;border:2px solid #f1dc9a;border-radius:12px;padding:10px 12px;font-size:1rem;font-weight:bold;line-height:1.5;color:#5a4a1a;margin-top:8px;animation:hitPop .3s both}
+  .strategy b{color:var(--red);font-size:1.1rem}
+
+  /* array */
+  .array-area{display:flex;flex-direction:column;gap:6px;align-items:center;justify-content:center}
+  .array-wrap{display:flex;align-items:flex-start;gap:8px}
+  .array-grid{display:grid;gap:4px;background:#f5eee0;padding:8px;border-radius:8px;cursor:pointer;transition:transform .5s ease}
+  .array-grid.turning{transform:rotate(90deg) scale(.9)}
+  .array-cell{width:16px;height:16px;border-radius:50%;background:radial-gradient(circle at 30% 30%,#ffd700,#e8b923);box-shadow:inset -1px -1px 2px rgba(0,0,0,.3);transition:transform .15s,background .15s}
+  .array-cell.counted{background:radial-gradient(circle at 30% 30%,#7ec8ff,var(--blue));transform:scale(1.12)}
+  .row-sums{display:grid;gap:4px;padding:8px 0}
+  .row-sums span{height:16px;font-size:.8rem;font-weight:bold;color:var(--blue);display:flex;align-items:center;min-width:24px}
+  .array-count{font-size:1.1rem;font-weight:bold;color:var(--blue);min-height:24px;text-align:center}
+  .array-hint{font-size:.8rem;color:#9a8f78;text-align:center;font-weight:bold}
+  .turn-btn{padding:6px 12px;font-size:.85rem;font-weight:bold;font-family:inherit;border:2px solid #cfc3a8;border-radius:10px;background:#fff;color:#6b6152;cursor:pointer}
+  .turn-btn:hover{border-color:var(--blue);color:var(--blue)}
+  .turn-note{font-size:.95rem;font-weight:bold;color:var(--green);min-height:20px;text-align:center}
+
+  /* tens & units (rods and balls) */
+  .blocks{display:flex;align-items:flex-end;justify-content:center;gap:10px;flex-wrap:wrap;min-height:74px;padding:4px 0}
+  .rods{display:flex;gap:3px;align-items:flex-end}
+  .bt-rod{width:10px;height:64px;border-radius:3px;flex:none;
+    background:repeating-linear-gradient(180deg,rgba(0,0,0,.25) 0 2px,transparent 2px 6.2px),linear-gradient(90deg,var(--rod2),var(--rod),var(--rod2));
+    box-shadow:0 2px 3px rgba(0,0,0,.35);animation:pop .25s cubic-bezier(.2,1.6,.5,1) both}
+  .balls{display:grid;grid-template-columns:repeat(5,16px);gap:3px}
+  .bt-ball{width:16px;height:16px;border-radius:50%;background:radial-gradient(circle at 30% 30%,#ff8a7a,var(--red));box-shadow:inset -2px -2px 3px rgba(0,0,0,.3),0 1px 2px rgba(0,0,0,.3);animation:pop .25s cubic-bezier(.2,1.6,.5,1) both}
+  @keyframes pop{from{transform:scale(0)}to{transform:scale(1)}}
+  .bt-caption{text-align:center;font-size:.95rem;font-weight:bold;color:var(--muted);min-height:20px}
+
+  /* keypad */
+  .pad{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin-top:12px}
+  .key{padding:13px 0;font-size:1.3rem;font-weight:bold;font-family:inherit;border:none;border-radius:9px;cursor:pointer;color:#fff;background:linear-gradient(180deg,#35704a,#245239);box-shadow:0 3px 0 #16321f;transition:transform .08s}
+  .key:hover{filter:brightness(1.12)}
+  .key:active{transform:translateY(2px);box-shadow:0 1px 0 #16321f}
+  .key.clr{background:linear-gradient(180deg,#8b8b8b,#6a6a6a);box-shadow:0 3px 0 #4a4a4a}
+  .key.go{font-size:1.05rem;background:linear-gradient(180deg,#d4483a,#a8301f);box-shadow:0 3px 0 #7a2115}
+
+  /* chips */
+  .chips{display:flex;flex-wrap:wrap;gap:5px;justify-content:center;align-items:center;margin-top:10px;padding-top:10px;border-top:1px dashed #e0d6c0}
+  .chip{width:38px;height:34px;font-size:1rem;font-weight:bold;font-family:inherit;border:2px solid #cfc3a8;border-radius:7px;background:#fff;color:#9a8f78;cursor:pointer;transition:all .15s}
+  .chip.on{background:var(--green);border-color:var(--green);color:#fff}
+  .chip:hover{transform:scale(1.06)}
+  .chips-hint{font-size:.8rem;color:#9a8f78;margin-left:8px;font-weight:bold}
+
+  @media(max-width:760px){
+    .main{flex-direction:column}
+    .col-side{min-width:0}
+    .eq{font-size:2rem}
+    .pifa-cell{font-size:.7rem}
+    .feedback{min-width:0}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topbar">
+    <h1 data-t="title">Table de Pythagore</h1>
+    <div class="top-right">
+      <div class="lang"><button data-lang="fr">FR</button><button data-lang="en">EN</button></div>
+      <button class="icon-btn" id="soundBtn">🔊</button>
+      <span class="pill" title="">✔ <span id="score">0</span></span>
+      <button class="icon-btn" id="resetBtn">↺</button>
+    </div>
+  </div>
+
+  <div class="modes">
+    <button class="mode-btn on" id="modeQuiz" data-t="modeQuiz">🎯 Quiz</button>
+    <button class="mode-btn" id="modeFree" data-t="modeFree">🔎 Libre</button>
+  </div>
+
+  <!-- QUIZ -->
+  <div class="q-row" id="quizRow">
+    <div class="eq" id="eq">2 × 3</div>
+    <div class="eq" style="color:#b9b0a0">=</div>
+    <div class="ans-box" id="ansBox">?</div>
+    <div class="feedback" id="feedback"></div>
+    <div class="q-tools">
+      <button class="tool-btn" id="hearBtn">🔊</button>
+      <button class="tool-btn next hidden" id="nextBtn" data-t="next">Suivant →</button>
+    </div>
+  </div>
+
+  <!-- FREE -->
+  <div class="picker-row hidden" id="freeRow">
+    <label data-t="row">Rangée :</label><span id="pickA"></span>
+    <label data-t="col">Colonne :</label><span id="pickB"></span>
+    <div class="free-eq" id="freeEq">? × ? = ?</div>
+    <div class="free-note" data-t="freeNote">Clique sur n'importe quel nombre : la table te montre tout le chemin!</div>
+  </div>
+
+  <div class="main">
+    <div class="col-table">
+      <div class="panel">
+        <div class="panel-title"><span data-t="tableTitle">Table de Pythagore</span><span class="tag" id="tableTag">2 × 3 = ?</span></div>
+        <div class="pifa-grid" id="pifaGrid"></div>
+        <div class="table-legend" id="legend"></div>
+      </div>
+    </div>
+
+    <div class="col-side">
+      <div class="panel" id="helpPanel">
+        <div class="panel-title"><span id="helpTitle"></span></div>
+        <div id="helpBody"></div>
+      </div>
+      <div class="panel" id="btPanel">
+        <div class="panel-title"><span data-t="btTitle">Dizaines et unités</span></div>
+        <div class="blocks" id="blocks"></div>
+        <div class="bt-caption" id="btCaption"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="pad" id="quizPad">
+    <button class="key" data-k="1">1</button><button class="key" data-k="2">2</button><button class="key" data-k="3">3</button>
+    <button class="key" data-k="4">4</button><button class="key" data-k="5">5</button><button class="key" data-k="6">6</button>
+    <button class="key" data-k="7">7</button><button class="key" data-k="8">8</button><button class="key" data-k="9">9</button>
+    <button class="key" data-k="0">0</button>
+    <button class="key clr" id="backBtn">⌫</button>
+    <button class="key go" id="goBtn" data-t="enter">Entrée ✓</button>
+  </div>
+
+  <div class="chips" id="chips"></div>
+</div>
+
+<script>
+/* =====================================================================
+   TABLE DE PYTHAGORE — multiplication trainer
+   • Quiz: the answer stays hidden until the kid tries ("?" in the table).
+   • 💡 Help on request: 1) dot array to count row by row, 2) a strategy
+     for that table (gives the steps, never the answer).
+   • After a mistake: full explanation, then "Next" when the kid is ready.
+   • 3 × 4 and 4 × 3 are the same fact (the array can turn on its side).
+   • French / English, read-aloud voice, missed facts remembered.
+===================================================================== */
+const $ = id => document.getElementById(id);
+const LS = {
+  get(k, d) { try { const v = localStorage.getItem('pt.' + k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } },
+  set(k, v) { try { localStorage.setItem('pt.' + k, JSON.stringify(v)); } catch (e) { /* storage unavailable */ } },
+};
+let lang = LS.get('lang', 'fr');
+let sound = LS.get('sound', true);
+
+const STR = {
+  fr: {
+    title: 'Table de Pythagore', modeQuiz: '🎯 Quiz', modeFree: '🔎 Libre', next: 'Suivant →', enter: 'Entrée ✓',
+    row: 'Rangée :', col: 'Colonne :', freeNote: 'Clique sur n\'importe quel nombre : la table te montre tout le chemin!',
+    tableTitle: 'Table de Pythagore', btTitle: 'Dizaines et unités',
+    typeAnswer: 'tape ta réponse', helpTitle: 'Besoin d\'aide?', helpTitleArray: 'Compte par rangées',
+    helpIntro: 'Tu peux essayer seul, ou demander de l\'aide. Pas de pénalité!',
+    helpBtn: '💡 Aide', helpMore: '💡 Encore de l\'aide', helpDone: 'Regarde aussi le chemin bleu dans la table : il mène à la case « ? ».',
+    arrayHint: 'Clique sur chaque rangée pour compter par bonds de {b}.',
+    arrayRows: '{r} rangée(s) de {b} = {n}', arrayAll: '{a} rangées de {b} = {n}',
+    turn: '↻ Tourner', turnNote: '{a} × {b} = {b} × {a} : même nombre de points!',
+    btHidden: 'Les blocs apparaissent après ta réponse.', btCount: 'Compte les dizaines et les unités!',
+    ok: 'Oui! {a} × {b} = {p}', okTwin: 'Oui! {a} × {b} = {p} (et {b} × {a} aussi!)',
+    no: '{a} × {b} = {p}. Regarde le chemin, les rangées et les blocs, puis clique sur Suivant.',
+    sayQ: 'Combien font {a} fois {b}?', sayOk: 'Bravo! {a} fois {b} égale {p}.', sayNo: 'Presque! {a} fois {b} égale {p}.',
+    legendQuiz: '<span class="swatch sw-blue"></span>le chemin… <span class="swatch sw-gold"></span>…mène à la réponse « ? »',
+    legendFree: '<span class="swatch sw-blue"></span>le chemin… <span class="swatch sw-orange"></span>…arrive à la réponse',
+    chipsHint: 'tables à pratiquer', tens: ['dizaine', 'dizaines'], ones: ['unité', 'unités'], and: 'et',
+    reset: 'Remettre le score à zéro', score: 'Réussies du premier coup',
+    strat: {
+      1: '×1 : le nombre ne change pas. 1 × {b} = <b>{b}</b>.',
+      2: '×2, c\'est le <b>double</b> : {b} + {b}.',
+      3: '×3 = ×2 + encore un groupe : ({b} + {b}) + {b}.',
+      4: '×4, c\'est le <b>double du double</b> : le double de {b}, c\'est {b2}… puis double encore!',
+      5: '×5, c\'est la <b>moitié de ×10</b> : {b} × 10 = {b10}… puis la moitié.',
+      6: '×6 = ×5 + encore un groupe : {b5} + {b}.',
+      7: '×7 = ×5 + ×2 : {b5} + {b2}.',
+      8: '×8 : <b>double, double, double</b> : {b} → {b2} → {b4} → ?',
+      9: '×9 = ×10 − un groupe : {b10} − {b}.',
+      10: '×10 : écris {b} et ajoute un <b>0</b>.',
+      11: '×11 = ×10 + encore un groupe : {b10} + {b}.',
+      12: '×12 = ×10 + ×2 : {b10} + {b2}.',
+    },
+  },
+  en: {
+    title: 'Times Table Trainer', modeQuiz: '🎯 Quiz', modeFree: '🔎 Free', next: 'Next →', enter: 'Enter ✓',
+    row: 'Row:', col: 'Column:', freeNote: 'Click any number: the table shows you the whole path!',
+    tableTitle: 'Multiplication table', btTitle: 'Tens and ones',
+    typeAnswer: 'type your answer', helpTitle: 'Need help?', helpTitleArray: 'Count by rows',
+    helpIntro: 'Try on your own, or ask for help. No penalty!',
+    helpBtn: '💡 Help', helpMore: '💡 More help', helpDone: 'Also follow the blue path in the table: it leads to the "?" square.',
+    arrayHint: 'Click each row to count in jumps of {b}.',
+    arrayRows: '{r} row(s) of {b} = {n}', arrayAll: '{a} rows of {b} = {n}',
+    turn: '↻ Turn', turnNote: '{a} × {b} = {b} × {a}: same number of dots!',
+    btHidden: 'The blocks appear after your answer.', btCount: 'Count the tens and the ones!',
+    ok: 'Yes! {a} × {b} = {p}', okTwin: 'Yes! {a} × {b} = {p} (and {b} × {a} too!)',
+    no: '{a} × {b} = {p}. Look at the path, the rows and the blocks, then click Next.',
+    sayQ: 'What is {a} times {b}?', sayOk: 'Well done! {a} times {b} equals {p}.', sayNo: 'Almost! {a} times {b} equals {p}.',
+    legendQuiz: '<span class="swatch sw-blue"></span>the path… <span class="swatch sw-gold"></span>…leads to the "?" answer',
+    legendFree: '<span class="swatch sw-blue"></span>the path… <span class="swatch sw-orange"></span>…lands on the answer',
+    chipsHint: 'tables to practise', tens: ['ten', 'tens'], ones: ['one', 'ones'], and: 'and',
+    reset: 'Reset score', score: 'Right on the first try',
+    strat: {
+      1: '×1: the number stays the same. 1 × {b} = <b>{b}</b>.',
+      2: '×2 is the <b>double</b>: {b} + {b}.',
+      3: '×3 = ×2 + one more group: ({b} + {b}) + {b}.',
+      4: '×4 is the <b>double of the double</b>: double {b} is {b2}… then double again!',
+      5: '×5 is <b>half of ×10</b>: {b} × 10 = {b10}… then take half.',
+      6: '×6 = ×5 + one more group: {b5} + {b}.',
+      7: '×7 = ×5 + ×2: {b5} + {b2}.',
+      8: '×8: <b>double, double, double</b>: {b} → {b2} → {b4} → ?',
+      9: '×9 = ×10 − one group: {b10} − {b}.',
+      10: '×10: write {b} and add a <b>0</b>.',
+      11: '×11 = ×10 + one more group: {b10} + {b}.',
+      12: '×12 = ×10 + ×2: {b10} + {b2}.',
+    },
+  },
+};
+function t(k, v) {
+  let s = STR[lang][k] ?? STR.en[k] ?? k;
+  if (v && typeof s === 'string') for (const x in v) s = s.split('{' + x + '}').join(v[x]);
+  return s;
+}
+function fill(s, v) { for (const x in v) s = s.split('{' + x + '}').join(v[x]); return s; }
+
+/* ---------------- voice ---------------- */
+function speak(text) {
+  if (!sound || !window.speechSynthesis) return;
+  try {
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = lang === 'fr' ? 'fr-CA' : 'en-US';
+    const voices = speechSynthesis.getVoices();
+    const v = voices.find(x => x.lang === u.lang) || voices.find(x => x.lang.startsWith(lang));
+    if (v) u.voice = v;
+    u.rate = 0.9;
+    speechSynthesis.speak(u);
+  } catch (e) { /* no voice */ }
+}
+if (window.speechSynthesis) speechSynthesis.onvoiceschanged = () => {};
+
+/* ---------------- state ---------------- */
+const MAX = 12;
+let mode = 'quiz';
+let selectedTables = LS.get('tables', [2, 3, 4, 5, 6, 7, 8, 9, 10]);
+let a = 2, b = 3, typed = '', answered = false, triedWrong = false, hintLevel = 0;
+let score = 0, lastKey = '';
+let freeA = 2, freeB = 3;
+let arrayRows = 2, arrayCols = 3, arrayCounted = 0, arrayTimer = null, nextTimer = null;
+const miss = LS.get('miss', {}); // weak facts, remembered between sessions; key "3x4" = same for 4 × 3
+
+const factKey = (x, y) => Math.min(x, y) + 'x' + Math.max(x, y);
+
+/* ---------------- table ---------------- */
+function buildTable() {
+  const grid = $('pifaGrid');
+  grid.innerHTML = '';
+  const add = (cls, txt, id) => { const c = document.createElement('div'); c.className = 'pifa-cell ' + cls; c.textContent = txt; if (id) c.id = id; grid.appendChild(c); return c; };
+  add('head', '×');
+  for (let j = 1; j <= MAX; j++) add('head', j, 'colh-' + j);
+  for (let i = 1; i <= MAX; i++) {
+    add('head', i, 'rowh-' + i);
+    for (let j = 1; j <= MAX; j++) {
+      const c = add(i === j ? 'dbl' : '', i * j, 'c-' + i + '-' + j);
+      c.onclick = () => {
+        if (mode === 'free') { freeA = i; freeB = j; renderFree(); }
+      };
+    }
+  }
+}
+function clearTable() {
+  document.querySelectorAll('.pifa-cell').forEach(c => {
+    c.classList.remove('path', 'answer', 'miss-flash', 'path-a', 'path-b', 'target', 'twin');
+    const m = c.id.match(/^c-(\d+)-(\d+)$/);
+    if (m) c.textContent = m[1] * m[2];
+  });
+}
+/* blue path along the row and the column; the answer square is hidden ("?") until the kid answers */
+function showPath(i, j, reveal, wrong) {
+  clearTable();
+  $('rowh-' + i).classList.add('path-a');
+  $('colh-' + j).classList.add('path-b');
+  for (let jj = 1; jj < j; jj++) $('c-' + i + '-' + jj).classList.add('path');
+  for (let ii = 1; ii < i; ii++) $('c-' + ii + '-' + j).classList.add('path');
+  const cell = $('c-' + i + '-' + j);
+  if (!reveal) {
+    cell.textContent = '?'; cell.classList.add('target');
+    if (i !== j && j <= MAX && i <= MAX) { const twin = $('c-' + j + '-' + i); twin.textContent = '?'; twin.classList.add('twin'); } // 4 × 3 would give 3 × 4 away
+  } else {
+    cell.classList.add(wrong ? 'miss-flash' : 'answer');
+  }
+  $('tableTag').textContent = i + ' × ' + j + ' = ' + (reveal ? i * j : '?');
+}
+
+/* ---------------- dot array ---------------- */
+function renderArray(rows, cols, allowTurn) {
+  clearTimeout(arrayTimer);
+  arrayRows = rows; arrayCols = cols; arrayCounted = 0;
+  const size = cols > 10 ? 12 : 16;
+  let dots = '', sums = '';
+  for (let r = 0; r < rows; r++) {
+    for (let c = 0; c < cols; c++) dots += '<div class="array-cell" data-row="' + r + '" style="width:' + size + 'px;height:' + size + 'px"></div>';
+    sums += '<span style="height:' + size + 'px"></span>';
+  }
+  return '<div class="array-area"><div class="array-wrap">' +
+    '<div class="array-grid" id="arrayGrid" style="grid-template-columns:repeat(' + cols + ',' + size + 'px)">' + dots + '</div>' +
+    '<div class="row-sums" id="rowSums">' + sums + '</div></div>' +
+    '<div class="array-count" id="arrayCount">&nbsp;</div>' +
+    '<div class="array-hint" id="arrayHint">' + t('arrayHint', { b: cols }) + '</div>' +
+    (allowTurn ? '<button class="turn-btn" id="turnBtn">' + t('turn') + '</button><div class="turn-note" id="turnNote"></div>' : '') +
+    '</div>';
+}
+function wireArray(showTotal) {
+  const grid = $('arrayGrid');
+  grid.addEventListener('click', e => {
+    const cell = e.target.closest('.array-cell');
+    if (cell) { clearTimeout(arrayTimer); countRow(+cell.dataset.row, showTotal()); }
+  });
+  if ($('turnBtn')) $('turnBtn').addEventListener('click', () => turnArray(showTotal));
+}
+function countRow(rowIdx, showTotal) {
+  if (!$('arrayGrid')) { clearTimeout(arrayTimer); return; }
+  const cells = [...$('arrayGrid').children];
+  arrayCounted = rowIdx + 1;
+  cells.forEach(c => c.classList.toggle('counted', +c.dataset.row < arrayCounted));
+  const sums = [...$('rowSums').children];
+  sums.forEach((s, k) => { s.textContent = k < arrayCounted ? (k + 1) * arrayCols : ''; }); // skip counting: 4, 8, 12…
+  const n = arrayCounted * arrayCols;
+  const last = arrayCounted >= arrayRows;
+  if (last && !showTotal) {
+    // in the quiz, before answering: the last jump is the kid's to say
+    sums[sums.length - 1].textContent = '?';
+    $('arrayCount').textContent = t('arrayRows', { r: arrayCounted, b: arrayCols, n: '?' });
+  } else {
+    $('arrayCount').textContent = last ? t('arrayAll', { a: arrayRows, b: arrayCols, n }) : t('arrayRows', { r: arrayCounted, b: arrayCols, n });
+  }
+}
+function autoCount(showTotal) {
+  let r = 0;
+  const step = () => { if (r >= arrayRows) return; countRow(r, showTotal); r++; arrayTimer = setTimeout(step, 450); };
+  step();
+}
+function turnArray(showTotal) {
+  const grid = $('arrayGrid');
+  grid.classList.add('turning');
+  setTimeout(() => {
+    if (!grid.isConnected) return;   // the panel changed meanwhile
+    const host = grid.closest('.array-area').parentElement;
+    const r = arrayRows, c = arrayCols;
+    host.innerHTML = renderArray(c, r, true);
+    wireArray(showTotal);
+    $('turnNote').textContent = t('turnNote', { a: r, b: c });
+    if (showTotal()) autoCount(true);
+  }, 500);
+}
+
+/* ---------------- tens & ones ---------------- */
+function showTensOnes(n, withCaption = true) {
+  const tens = Math.floor(n / 10), ones = n % 10;
+  let rods = '', balls = '', d = 0;
+  for (let i = 0; i < tens; i++) rods += '<div class="bt-rod" style="animation-delay:' + (d += 40) + 'ms"></div>';
+  for (let i = 0; i < ones; i++) balls += '<div class="bt-ball" style="animation-delay:' + (d += 40) + 'ms"></div>';
+  $('blocks').innerHTML = (rods ? '<div class="rods">' + rods + '</div>' : '') + (balls ? '<div class="balls">' + balls + '</div>' : '');
+  const parts = [];
+  if (tens) parts.push(tens + ' ' + t('tens')[tens > 1 ? 1 : 0]);
+  if (ones) parts.push(ones + ' ' + t('ones')[ones > 1 ? 1 : 0]);
+  $('btCaption').textContent = withCaption ? parts.join(' ' + t('and') + ' ') + ' = ' + n : t('btCount');
+}
+function hideTensOnes() {
+  $('blocks').innerHTML = '<span style="font-size:.85rem;color:#b5ab97;font-weight:bold">' + t('btHidden') + '</span>';
+  $('btCaption').textContent = '';
+}
+
+/* ---------------- help (quiz) ---------------- */
+function strategyText(table, other) {
+  const s = t('strat')[table] || t('strat')[2];
+  return fill(s, { b: other, b2: other * 2, b4: other * 4, b5: other * 5, b10: other * 10 });
+}
+function renderHelp() {
+  if (mode !== 'quiz') return;
+  if (answered) {
+    $('helpTitle').textContent = t('helpTitleArray');
+    $('helpBody').innerHTML = renderArray(a, b, true);
+    wireArray(() => true);
+    autoCount(true);
+    return;
+  }
+  if (hintLevel === 0) {
+    $('helpTitle').textContent = t('helpTitle');
+    $('helpBody').innerHTML = '<div class="help-start"><p>' + t('helpIntro') + '</p><button class="hint-btn" id="hintBtn">' + t('helpBtn') + '</button></div>';
+  } else {
+    $('helpTitle').textContent = t('helpTitleArray');
+    let html = renderArray(a, b, true);
+    if (hintLevel >= 2) html += '<div class="strategy">' + strategyText(a, b) + '</div>';
+    if (hintLevel >= 2) html += '<div class="array-hint" style="margin-top:6px">' + t('helpDone') + '</div>';
+    else html += '<div style="text-align:center;margin-top:8px"><button class="hint-btn" id="hintBtn">' + t('helpMore') + '</button></div>';
+    $('helpBody').innerHTML = html;
+    wireArray(() => answered);
+  }
+  if ($('hintBtn')) $('hintBtn').addEventListener('click', () => { hintLevel++; renderHelp(); });
+}
+
+/* ---------------- quiz ---------------- */
+function pickPair() {
+  const weak = [];
+  for (const k in miss) {
+    if (miss[k] > 0) {
+      const [x, y] = k.split('x').map(Number);
+      // a weak fact comes back in the order that uses a selected table
+      if (selectedTables.includes(x)) weak.push([x, y, miss[k]]);
+      else if (selectedTables.includes(y)) weak.push([y, x, miss[k]]);
+    }
+  }
+  if (weak.length && Math.random() < 0.5) {
+    const total = weak.reduce((s, w) => s + w[2], 0);
+    let r = Math.random() * total;
+    for (const w of weak) { r -= w[2]; if (r <= 0) return [w[0], w[1]]; }
+    return [weak[0][0], weak[0][1]];
+  }
+  return [selectedTables[Math.floor(Math.random() * selectedTables.length)], 1 + Math.floor(Math.random() * 10)];
+}
+function newQuestion() {
+  clearTimeout(nextTimer);
+  let pair, guard = 0;
+  do { pair = pickPair(); guard++; } while (factKey(pair[0], pair[1]) === lastKey && guard < 15);
+  [a, b] = pair; lastKey = factKey(a, b);
+  typed = ''; answered = false; triedWrong = false; hintLevel = 0;
+  $('eq').textContent = a + ' × ' + b;
+  $('ansBox').textContent = '?'; $('ansBox').className = 'ans-box';
+  $('feedback').textContent = t('typeAnswer'); $('feedback').className = 'feedback';
+  $('nextBtn').classList.add('hidden');
+  showPath(a, b, false);
+  showTensOnes(a * b, false);   // blocks visible from the start; the number comes after the answer
+  renderHelp();
+  speak(t('sayQ', { a, b }));
+}
+function typeDigit(d) {
+  if (answered || typed.length >= 3) return;
+  typed += d; $('ansBox').textContent = typed;
+}
+function backspace() {
+  if (answered) return;
+  typed = typed.slice(0, -1);                   // removes ONE digit
+  $('ansBox').textContent = typed || '?';
+}
+function submit() {
+  if (mode !== 'quiz') return;
+  if (answered) { nextOrNothing(); return; }
+  if (typed === '') return;
+  answered = true;
+  const p = a * b, given = parseInt(typed, 10), key = factKey(a, b);
+  if (given === p) {
+    $('ansBox').classList.add('good');
+    $('feedback').textContent = a !== b ? t('okTwin', { a, b, p }) : t('ok', { a, b, p });
+    $('feedback').className = 'feedback ok';
+    score++; $('score').textContent = score;
+    if (miss[key] > 0) miss[key] = Math.max(0, miss[key] - 1); // a right answer heals a weak fact a little
+    LS.set('miss', miss);
+    showPath(a, b, true);
+    speak(t('sayOk', { a, b, p }));
+    nextTimer = setTimeout(newQuestion, 2600);
+    $('nextBtn').classList.remove('hidden');
+  } else {
+    $('ansBox').classList.add('bad');
+    $('feedback').textContent = t('no', { a, b, p });
+    $('feedback').className = 'feedback no';
+    miss[key] = (miss[key] || 0) + 2;            // comes back more often
+    LS.set('miss', miss);
+    showPath(a, b, true, true);
+    speak(t('sayNo', { a, b, p }));
+    $('nextBtn').classList.remove('hidden');      // no rush: the kid looks, then clicks Next
+  }
+  showTensOnes(p);
+  renderHelp();
+}
+function nextOrNothing() { if (mode === 'quiz' && answered) newQuestion(); }
+
+/* ---------------- free mode ---------------- */
+function renderFreePickers() {
+  const pa = $('pickA'), pb = $('pickB');
+  pa.innerHTML = ''; pb.innerHTML = '';
+  for (let n = 1; n <= MAX; n++) {
+    const bA = document.createElement('button');
+    bA.className = 'val-btn' + (n === freeA ? ' sel-a' : ''); bA.textContent = n;
+    bA.onclick = () => { freeA = n; renderFree(); };
+    pa.appendChild(bA);
+    const bB = document.createElement('button');
+    bB.className = 'val-btn' + (n === freeB ? ' sel-b' : ''); bB.textContent = n;
+    bB.onclick = () => { freeB = n; renderFree(); };
+    pb.appendChild(bB);
+  }
+}
+function renderFree() {
+  renderFreePickers();
+  $('freeEq').textContent = freeA + ' × ' + freeB + ' = ' + freeA * freeB;
+  showPath(freeA, freeB, true);
+  showTensOnes(freeA * freeB);
+  $('helpTitle').textContent = t('helpTitleArray');
+  $('helpBody').innerHTML = renderArray(freeA, freeB, true);
+  wireArray(() => true);
+  autoCount(true);
+}
+
+/* ---------------- modes, language, chips ---------------- */
+function setMode(m) {
+  mode = m;
+  clearTimeout(nextTimer);
+  $('modeQuiz').classList.toggle('on', m === 'quiz');
+  $('modeFree').classList.toggle('on', m === 'free');
+  $('quizRow').classList.toggle('hidden', m !== 'quiz');
+  $('quizPad').classList.toggle('hidden', m !== 'quiz');
+  $('freeRow').classList.toggle('hidden', m !== 'free');
+  $('chips').classList.toggle('hidden', m !== 'quiz');
+  $('legend').innerHTML = m === 'quiz' ? t('legendQuiz') : t('legendFree');
+  if (m === 'quiz') newQuestion(); else renderFree();
+}
+function buildChips() {
+  const box = $('chips');
+  box.innerHTML = '';
+  for (let n = 2; n <= 10; n++) {
+    const c = document.createElement('button');
+    c.className = 'chip' + (selectedTables.includes(n) ? ' on' : ''); c.textContent = n;
+    c.onclick = () => {
+      c.classList.toggle('on');
+      selectedTables = [...box.querySelectorAll('.chip.on')].map(x => +x.textContent);
+      if (!selectedTables.length) { c.classList.add('on'); selectedTables = [n]; }
+      LS.set('tables', selectedTables);
+      if (mode === 'quiz') newQuestion();
+    };
+    box.appendChild(c);
+  }
+  const h = document.createElement('span'); h.className = 'chips-hint'; h.textContent = t('chipsHint'); box.appendChild(h);
+}
+function applyLang() {
+  document.documentElement.lang = lang;
+  document.title = t('title');
+  document.querySelectorAll('[data-t]').forEach(el => { el.textContent = t(el.dataset.t); });
+  document.querySelectorAll('[data-lang]').forEach(x => x.classList.toggle('on', x.dataset.lang === lang));
+  $('resetBtn').title = t('reset');
+  document.querySelector('.pill').title = t('score');
+  buildChips();
+}
+
+/* ---------------- events ---------------- */
+$('modeQuiz').onclick = () => setMode('quiz');
+$('modeFree').onclick = () => setMode('free');
+document.querySelectorAll('.key[data-k]').forEach(k => { k.onclick = () => typeDigit(k.dataset.k); });
+$('backBtn').onclick = backspace;
+$('goBtn').onclick = submit;
+$('nextBtn').onclick = newQuestion;
+$('hearBtn').onclick = () => { const was = sound; sound = true; speak(t('sayQ', { a, b })); sound = was; };
+$('soundBtn').textContent = sound ? '🔊' : '🔇';
+$('soundBtn').onclick = () => { sound = !sound; LS.set('sound', sound); $('soundBtn').textContent = sound ? '🔊' : '🔇'; if (!sound && window.speechSynthesis) speechSynthesis.cancel(); };
+$('resetBtn').onclick = () => { score = 0; $('score').textContent = '0'; for (const k in miss) delete miss[k]; LS.set('miss', miss); if (mode === 'quiz') newQuestion(); };
+document.querySelectorAll('[data-lang]').forEach(x => x.onclick = () => { lang = x.dataset.lang; LS.set('lang', lang); applyLang(); setMode(mode); });
+document.addEventListener('keydown', e => {
+  if (mode !== 'quiz') return;
+  if (e.key >= '0' && e.key <= '9') typeDigit(e.key);
+  else if (e.key === 'Enter') { e.preventDefault(); submit(); }
+  else if (e.key === 'Backspace') { e.preventDefault(); backspace(); }
+  else if (e.key === 'Escape') { typed = ''; if (!answered) $('ansBox').textContent = '?'; }
+});
+
+/* ---------------- start ---------------- */
+buildTable();
+applyLang();
+setMode('quiz');
+</script>
+</body>
+</html>
