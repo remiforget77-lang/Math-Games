@@ -405,6 +405,87 @@ button{font:inherit;color:inherit;border:0;cursor:pointer;font-family:"Fredoka",
 .bk-tap{font-size:12px;font-weight:800;color:var(--muted)}
 @keyframes bkIn{from{opacity:0;transform:scale(.6)}to{opacity:1;transform:scale(1)}}
 @keyframes bkOut{to{opacity:0;transform:scale(.9)}}
+
+/* ===== Step by step: one column at a time, −1 (borrow) and +1 (carry) ===== */
+.st-switch{flex-basis:100%;display:flex;justify-content:center;gap:6px;margin:-2px 0 4px}
+.st-switch button{padding:7px 14px;border-radius:12px;background:#fff;border:2px solid var(--line);font-size:14px;font-weight:600;color:var(--muted);transition:.2s}
+.st-switch button:hover{border-color:var(--sky)}
+.st-switch button.on{background:linear-gradient(135deg,var(--sky),#3da8d8);border-color:var(--sky);color:#fff}
+.st-wrap{display:flex;flex-direction:column;align-items:center;gap:12px;background:#fff;border:2px solid var(--line);border-radius:18px;padding:12px 14px 14px;box-shadow:var(--shadow-sm);max-width:100%}
+.st-grid{display:grid;grid-template-columns:26px repeat(var(--cols),44px);column-gap:6px;row-gap:3px;align-items:end;justify-items:center;font-family:"Fredoka",sans-serif}
+.st-h{font-size:11px;font-weight:800;padding:2px 0;border-radius:7px;text-align:center;width:100%}
+.st-h.h-one{background:#ffe9e6;color:#c9473a}.st-h.h-ten{background:#e3f3fc;color:#2c86b8}.st-h.h-hundred{background:#dff6ee;color:#2a9468}.st-h.h-thousand{background:#efedfb;color:#6b62b8}.st-h.h-tenthousand{background:#fff1dc;color:#b97716}
+.st-b{height:26px;display:flex;align-items:flex-end;justify-content:center}
+.st-badge{font-style:normal;font-size:14px;font-weight:700;padding:1px 7px;border-radius:10px;white-space:nowrap;line-height:1.3}
+.st-badge.pop{animation:popIn .4s both}
+.st-badge.minus{background:#fdeae8;color:#c9473a;border:2px solid #f5b5ad}
+.st-badge.plus{background:#fff1dc;color:#b97716;border:2px solid #ffd18a}
+.st-badge.small{font-size:10px;padding:1px 4px}
+.st-d{width:44px;height:46px;display:flex;align-items:center;justify-content:center;gap:1px;font-size:28px;font-weight:600;border-radius:10px;line-height:1}
+.st-d.top{background:#faf6ef}
+.st-d.bot{background:#eef7fc}
+.st-d.ans{background:#fff8ec;border:2px dashed var(--gold);color:var(--ink)}
+.st-d.ans.filled{border-style:solid}
+.st-d.ans.pop{animation:popIn .35s both}
+.st-d.ans.lead0{color:#d6cbb8;border-color:#f1dfb8;background:#fffdf8}
+.st-d.now{box-shadow:0 0 0 3px var(--sky)}
+.st-d{position:relative}
+.st-d s{position:absolute;top:2px;right:3px;color:var(--muted);font-size:14px;text-decoration-thickness:2px;text-decoration-color:var(--coral)}
+.st-d em{font-style:normal;color:var(--coral)}
+.st-d .st-ten{font-style:normal;font-size:16px;color:#2c86b8;align-self:flex-start;margin-top:3px}
+.st-op{font-size:26px;font-weight:600;color:var(--coral);align-self:center}
+.st-line{grid-column:1/-1;width:100%;height:3px;background:var(--ink);opacity:.25;border-radius:2px}
+.st-work{width:100%;display:flex;flex-direction:column;align-items:center;gap:10px;border-top:2px dashed var(--line);padding-top:12px}
+.st-title{font-size:11px;font-weight:900;color:var(--muted);text-transform:uppercase;letter-spacing:1px}
+.st-eq{font-family:"Fredoka",sans-serif;font-size:30px;font-weight:600;line-height:1}
+.st-eq .c-a{color:var(--coral)}.st-eq .c-b{color:#2c86b8}.st-eq .c-c{color:#d48a12}.st-eq .c-l{color:#2c86b8}
+.st-dots{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;align-items:flex-start}
+.st-fbox{display:flex;flex-direction:column;align-items:center;gap:4px}
+.st-frame{display:grid;grid-template-columns:repeat(5,28px);grid-template-rows:repeat(2,28px);gap:4px;padding:6px;border:3px solid #d9cdb8;border-radius:12px;background:#fff}
+.st-frame.lent{border-color:#7cc8ef;background:#f0f8fd}
+.st-frame.full{border-color:var(--gold);background:#fffaf0}
+.st-frame.fly{animation:stFly .8s ease-in forwards;border-color:var(--gold)}
+@keyframes stFly{to{transform:translate(-70px,-110px) scale(.25);opacity:0}}
+.st-cell{border:2px dashed #eadfcb;border-radius:8px;display:grid;place-items:center}
+.st-dot{width:22px;height:22px;border-radius:50%;padding:0;border:0;box-shadow:inset -2px -2px 0 rgba(0,0,0,.12);position:relative;cursor:pointer}
+.st-dot.a{background:var(--coral)}.st-dot.b{background:var(--sky)}.st-dot.c{background:var(--gold)}.st-dot.l{background:#3da8d8}
+.st-dot.pop{animation:popIn .3s both}
+.st-dot.x{opacity:.4}
+.st-dot.x::after{content:"✕";position:absolute;inset:0;display:grid;place-items:center;color:#2a3a5c;font-size:17px;font-weight:900}
+.st-dot.k::after{content:"";position:absolute;inset:-4px;border:3px solid var(--mint);border-radius:50%}
+.st-cap{font-size:12px;font-weight:800;color:var(--muted)}
+.st-count{font-size:13px;font-weight:800;color:var(--muted);min-height:18px}
+.st-swap{min-width:96px;padding:9px 16px;border-radius:16px;font-size:26px;font-weight:700;color:#fff;box-shadow:0 4px 0 rgba(0,0,0,.15);display:flex;flex-direction:column;align-items:center;line-height:1;transition:.18s}
+.st-swap small{font-size:12px;font-weight:600;margin-top:3px}
+.st-swap:hover{transform:translateY(-2px)}
+.st-swap.minus{background:linear-gradient(135deg,var(--coral),var(--coral-dark))}
+.st-swap.plus{background:linear-gradient(135deg,var(--gold),#e8a030)}
+.st-swap.hint{animation:stGlow 1.8s ease-in-out infinite}
+@keyframes stGlow{0%,100%{box-shadow:0 4px 0 rgba(0,0,0,.15),0 0 0 0 rgba(255,184,77,0)}50%{box-shadow:0 4px 0 rgba(0,0,0,.15),0 0 0 9px rgba(255,184,77,.35)}}
+.st-swap:disabled{opacity:.35;cursor:default;animation:none;transform:none}
+.st-msg{min-height:40px;max-width:460px;text-align:center;font-size:15px;font-weight:800;padding:8px 12px;border-radius:12px;background:#f4f8fc;color:var(--ink);line-height:1.35}
+.st-msg.soft{background:#fff4e5;color:#9a5b00}
+.st-msg.good{background:var(--green-bg);color:#2d7a44}
+.st-padlabel{font-size:12px;font-weight:800;color:var(--muted)}
+.st-pad{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;max-width:300px}
+.st-pad button{width:48px;height:48px;border-radius:14px;background:#fff;border:2px solid var(--line);font-size:22px;font-weight:600;box-shadow:0 3px 0 #e9e0d5;transition:.15s}
+.st-pad button:hover{border-color:var(--sky);transform:translateY(-2px)}
+.st-pad.wait button{opacity:.45}
+.st-pad button.no{animation:shake .42s both;border-color:var(--red)}
+@media(max-width:560px){
+  .st-grid{grid-template-columns:20px repeat(var(--cols),36px);column-gap:4px}
+  .st-d{width:36px;height:40px;font-size:23px}
+  .st-frame{grid-template-columns:repeat(5,24px);grid-template-rows:repeat(2,24px);gap:3px;padding:5px}
+  .st-dot{width:19px;height:19px}
+  .st-eq{font-size:26px}
+  .st-pad button{width:44px;height:44px}
+}
+.st-switch .st-demo{background:#fff8ec;border-color:var(--gold);color:#b97716}
+.st-demo-tag{align-self:center;font-size:13px;font-weight:900;color:#b97716;background:#fff1dc;border-radius:10px;padding:6px 10px}
+.st-wrap.demo{border-color:var(--gold);box-shadow:0 0 0 4px #fff1dc}
+.demo-press{position:relative;transform:scale(1.12)!important;box-shadow:0 0 0 5px rgba(90,184,232,.6)!important;transition:.2s}
+.demo-press::after{content:"👆";position:absolute;left:50%;bottom:-26px;transform:translateX(-30%);font-size:24px;animation:popIn .25s both;pointer-events:none}
+@media(prefers-reduced-motion:reduce){.st-wrap *,.st-switch *{animation:none!important;transition:none!important}}
 </style>
   <meta property="og:image" content="https://bolt.new/static/og_default.png">
   <meta name="twitter:card" content="summary_large_image">
@@ -565,6 +646,30 @@ const STR = {
     pv_tenthousand: 'Dizaines de mille', pv_thousand: 'Milliers', pv_hundred: 'Centaines', pv_ten: 'Dizaines', pv_one: 'Unités',
     pvw_tenthousand: ['dizaine de mille', 'dizaines de mille'], pvw_thousand: ['millier', 'milliers'], pvw_hundred: ['centaine', 'centaines'],
     pvw_ten: ['dizaine', 'dizaines'], pvw_one: ['unité', 'unités'], and: 'et',
+    st_view_blocks: '🧱 Blocs', st_view_steps: '🐾 Pas à pas', st_col: 'Colonne des {name}',
+    st_borrow: 'emprunter', st_carry: 'retenue', st_dot1: 'point', st_dots: 'points',
+    st_sub_need: '{a} est plus petit que {b} : on ne peut pas enlever {b}. Touche −1 pour emprunter 10 points au voisin de gauche.',
+    st_sub_ok: 'Barre {bp}, puis compte ceux qui restent.',
+    st_sub_zero: 'Il n\'y a rien à enlever : compte les points.',
+    st_borrowed: 'Le voisin te prête 10 points. Maintenant, c\'est {a} − {b}.',
+    st_borrow_zero: 'Le 0 n\'a rien à prêter. Il emprunte d\'abord à son voisin, puis il te prête 10 points (il lui reste 9). Maintenant, c\'est {a} − {b}.',
+    st_no_borrow: 'Pas besoin d\'emprunter : {a} est assez grand pour enlever {b}.',
+    st_was: 'Le {o} a prêté 1 : il devient {n}.', st_was0: 'Le 0 a emprunté, puis prêté : il devient 9.',
+    st_add_ok: 'Compte tous les points : combien y en a-t-il?',
+    st_add_full: 'Un cadre de 10 est plein! Touche +1 pour envoyer ces 10 points au voisin de gauche.',
+    st_carried: 'Les 10 points sont partis chez le voisin : il a maintenant +1. Combien de points restent ici?',
+    st_no_carry: 'Pas besoin : il y a moins de 10 points ici.',
+    st_first_sub: 'D\'abord, touche −1 pour emprunter 10 points.', st_first_add: 'D\'abord, touche +1 pour envoyer les 10 points au voisin.',
+    st_wrong_sub: 'Pas tout à fait. Compte les points qui ne sont pas barrés.',
+    st_wrong_add: 'Pas tout à fait. Touche chaque point pour le compter, doucement.',
+    st_cross_max: 'Tu as déjà barré {bp}. Touche un point barré pour le remettre.',
+    st_crossed_done: 'C\'est fait! Combien de points restent?',
+    st_crossed: 'Barrés : {x} sur {b}', st_counted: 'Comptés : {x}', st_lent: '10 du voisin', st_here: '{n} ici',
+    st_pad: 'Ta réponse pour cette colonne :',
+    st_done: 'Bravo! La réponse est {n}. Maintenant, touche {n} en bas pour équilibrer la balance!',
+    st_short: ['U', 'D', 'C', 'UM', 'DM'],
+    st_demo_btn: '▶ Exemple', st_demo_tag: '▶ Exemple', st_demo_back: '← Ma question', st_demo_again: '↻ Revoir',
+    st_demo_end: 'Et voilà : {eq}! À toi maintenant : touche « Ma question ».',
     cats: ['Guimauve', 'Bleuet', 'Pêche', 'Menthe', 'Soleil', 'Gomme', 'Lavande', 'Biscuit', 'Veilleuse'],
   },
   en: {
@@ -612,6 +717,30 @@ const STR = {
     pv_tenthousand: 'Ten thousands', pv_thousand: 'Thousands', pv_hundred: 'Hundreds', pv_ten: 'Tens', pv_one: 'Ones',
     pvw_tenthousand: ['ten thousand', 'ten thousands'], pvw_thousand: ['thousand', 'thousands'], pvw_hundred: ['hundred', 'hundreds'],
     pvw_ten: ['ten', 'tens'], pvw_one: ['one', 'ones'], and: 'and',
+    st_view_blocks: '🧱 Blocks', st_view_steps: '🐾 Step by step', st_col: 'The {name} column',
+    st_borrow: 'borrow', st_carry: 'carry', st_dot1: 'dot', st_dots: 'dots',
+    st_sub_need: '{a} is smaller than {b}, so we can\'t take away {b}. Tap −1 to borrow 10 dots from the neighbour on the left.',
+    st_sub_ok: 'Cross out {bp}, then count the ones left.',
+    st_sub_zero: 'Nothing to take away: count the dots.',
+    st_borrowed: 'The neighbour lends you 10 dots. Now it\'s {a} − {b}.',
+    st_borrow_zero: 'The 0 has nothing to lend. It borrows from its own neighbour first, then lends you 10 dots (it keeps 9). Now it\'s {a} − {b}.',
+    st_no_borrow: 'No need to borrow: {a} is big enough to take away {b}.',
+    st_was: 'The {o} lent 1, so it becomes {n}.', st_was0: 'The 0 borrowed, then lent: it becomes 9.',
+    st_add_ok: 'Count all the dots: how many are there?',
+    st_add_full: 'A frame of 10 is full! Tap +1 to send those 10 dots to the neighbour on the left.',
+    st_carried: 'The 10 dots went to the neighbour: it now has +1. How many dots are left here?',
+    st_no_carry: 'No need: there are fewer than 10 dots here.',
+    st_first_sub: 'First, tap −1 to borrow 10 dots.', st_first_add: 'First, tap +1 to send the 10 dots to the neighbour.',
+    st_wrong_sub: 'Not quite. Count the dots that are not crossed out.',
+    st_wrong_add: 'Not quite. Tap each dot to count it, slowly.',
+    st_cross_max: 'You already crossed out {bp}. Tap a crossed dot to bring it back.',
+    st_crossed_done: 'Done! How many dots are left?',
+    st_crossed: 'Crossed out: {x} of {b}', st_counted: 'Counted: {x}', st_lent: '10 from the neighbour', st_here: '{n} here',
+    st_pad: 'Your answer for this column:',
+    st_done: 'Well done! The answer is {n}. Now tap {n} below to balance the scale!',
+    st_short: ['O', 'T', 'H', 'Th', 'TTh'],
+    st_demo_btn: '▶ Example', st_demo_tag: '▶ Example', st_demo_back: '← My question', st_demo_again: '↻ Watch again',
+    st_demo_end: 'And there it is: {eq}! Your turn now: tap "My question".',
     cats: ['Marshmallow', 'Blueberry', 'Peach', 'Minty', 'Sunny', 'Bubblegum', 'Lavender', 'Cookie', 'Nightlight'],
   },
 };
@@ -837,7 +966,7 @@ function buildStartScreen() {
     card.addEventListener('click', () => startGame(mode, Number(card.dataset.level))));
 }
 function showStart() {
-  clearInterval(dealTimer);
+  clearInterval(dealTimer); stopDemo();
   clearTimeout(bigKittenTimer); bigKittenDone = null; $('bigKitten').hidden = true;
   $('startScreen').style.display = '';
   $('gameScreen').style.display = 'none';
@@ -983,6 +1112,7 @@ function subtractionModel(a, b) {
 }
 
 function render() {
+  stopDemo();
   $('progressFill').style.width = (round / TOTAL * 100) + '%';
   $('feedback').className = 'feedback'; $('feedback').textContent = '';
   $('nextBtn').classList.add('hidden');
@@ -1019,10 +1149,10 @@ function render() {
     }
   } else if (mode === 'addition') {
     if (small) { $('hint').textContent = t('hint_add_small'); visual = tenFrames(current.a, current.b, 0); }
-    else { $('hint').textContent = t('hint_add_col'); visual = placeRows(current.a, current.b, '+'); }
+    else { $('hint').textContent = t('hint_add_col'); visual = ''; }
   } else if (mode === 'subtraction') {
     if (small) { $('hint').textContent = t('hint_sub_small', { a: current.a, b: current.b }); visual = subtractionModel(current.a, current.b); }
-    else { $('hint').textContent = t('hint_sub_col'); visual = placeRows(current.a, current.b, '−'); }
+    else { $('hint').textContent = t('hint_sub_col'); visual = ''; }
   } else if (mode === 'division') {
     $('hint').textContent = t('hint_div', { t: current.total, b: current.b });
     // a pile of treats is dealt out one by one into the plates
@@ -1033,6 +1163,7 @@ function render() {
     visual = '<div class="deal"><div class="pile dots">' + pile + '</div><div class="plates">' + plates + '</div></div>';
   }
   $('visual').innerHTML = visual;
+  if (isColMode()) { colResult = undefined; mountColumnVisual(); } // blocks or step by step
   if (mode === 'division') startDealing();
 
   if (mode === 'addition' || mode === 'subtraction') {
@@ -1182,6 +1313,292 @@ function buildMiniColumn(a, b, op, result) {
   return '<div class="mini-col">' + r1 + '</div>' + r2 + '</div><div class="mini-col-line"></div>' + r3 + '</div></div>';
 }
 
+/* ---------------- Step by step: one column at a time, with −1 (borrow) and +1 (carry) ----------------
+   Columns are counted from the right: 0 = ones, 1 = tens, 2 = hundreds…
+   Subtraction (ex. 1234 − 1156): 4 − 6 can't be done, so the kid taps −1. A "−1" appears above
+   the 3, and 10 dots open up next to the 4 dots: the kid crosses out 6 and counts 8.
+   On the next column the 3 shows as 2 (it lent 1), and so on. A 0 that has nothing to lend
+   borrows from its own neighbour first and becomes 9.
+   Addition (ex. 58 + 67): when a column has 10 dots or more, a frame of 10 fills up. The kid
+   taps +1: those 10 dots fly to the neighbour as a "+1", and the kid counts what is left.
+   No timer, no penalty: a wrong digit only gets a gentle tip. */
+let stepOn = LS.get('stepByStep', false);
+let SP = null, colResult;
+function isColMode() { return (mode === 'addition' || mode === 'subtraction') && level >= SMALL_LEVELS; }
+function digitsOf(n, len) { const s = String(n), out = []; for (let i = 0; i < len; i++) { const ch = s[s.length - 1 - i]; out.push(ch === undefined ? null : Number(ch)); } return out; }
+function nDots(n) { return n + ' ' + t(n === 1 ? 'st_dot1' : 'st_dots'); }
+function sayable(s) { return String(s).replace(/−/g, ' ' + t('op_sub') + ' ').replace(/\+/g, ' ' + t('op_add') + ' '); }
+const spPlace = i => PLACES[PLACES.length - 1 - i].k;
+const spB = i => SP.bot[i] || 0;
+const spTopVal = i => SP.cur[i] + (SP.borrowed[i] ? 10 : 0);       // subtraction: top digit after lending/borrowing
+const spSum = i => (SP.top[i] || 0) + spB(i) + SP.carryIn[i];      // addition: all the dots of the column
+function spNeeds(i) { return SP.sub ? (!SP.borrowed[i] && SP.cur[i] < spB(i)) : (!SP.carried[i] && spSum(i) >= 10); }
+function spTarget(i) { return SP.sub ? spTopVal(i) - spB(i) : spSum(i) - (SP.carried[i] ? 10 : 0); }
+
+function spStart(a, b, sub, res) {
+  const len = Math.max(String(a).length, String(b).length, String(res).length);
+  const top = digitsOf(a, len), zeros = () => Array(len).fill(0);
+  SP = { q: current, a, b, res, sub, len, top, bot: digitsOf(b, len), cur: top.map(d => d || 0),
+    minus: zeros(), via0: zeros(), borrowed: zeros(), carryIn: zeros(), carried: zeros(), ans: Array(len).fill(null),
+    col: 0, marks: new Set(), done: false, anim: 'col', fresh: new Set(), justFilled: -1, msg: '', kind: '' };
+  spIntro();
+}
+function spIntro() {
+  const i = SP.col;
+  let m;
+  if (SP.sub) m = spNeeds(i) ? t('st_sub_need', { a: SP.cur[i], b: spB(i) }) : spB(i) === 0 ? t('st_sub_zero') : t('st_sub_ok', { bp: nDots(spB(i)) });
+  else m = spNeeds(i) ? t('st_add_full') : t('st_add_ok');
+  if (SP.via0[i]) m = t('st_was0') + ' ' + m;
+  else if (SP.minus[i]) m = t('st_was', { o: SP.top[i], n: SP.cur[i] }) + ' ' + m;
+  SP.msg = m; SP.kind = '';
+}
+function spDoBorrow(i) {
+  let j = i + 1;
+  while (j < SP.len && SP.cur[j] === 0) j++;   // a 0 has nothing to lend: go further left
+  SP.cur[j] -= 1; SP.minus[j] = 1; SP.fresh.add(j);
+  for (let k = i + 1; k < j; k++) { SP.cur[k] = 9; SP.via0[k] = 1; SP.fresh.add(k); }
+  SP.borrowed[i] = 1;
+  return j;
+}
+function spDoCarry(i) { SP.carried[i] = 1; SP.carryIn[i + 1] = 1; SP.fresh.add(i + 1); }
+function spSolveAll() {
+  while (SP.col < SP.len) {
+    const i = SP.col;
+    if (spNeeds(i)) { if (SP.sub) spDoBorrow(i); else spDoCarry(i); }
+    SP.ans[i] = spTarget(i); SP.col++;
+  }
+  SP.done = true; SP.fresh = new Set(); SP.anim = '';
+  SP.msg = '✓ ' + eqText();
+  SP.kind = 'good';
+}
+
+function spGrid() {
+  const s = SP, cols = [];
+  for (let c = s.len - 1; c >= 0; c--) cols.push(c);
+  const now = c => (!s.done && c === s.col ? ' now' : '');
+  let hi = 0;
+  s.ans.forEach((v, c) => { if (v) hi = Math.max(hi, c); });
+  let h = '<div class="st-grid" style="--cols:' + s.len + '">';
+  h += '<span></span>' + cols.map(c => '<span class="st-h h-' + spPlace(c) + '" title="' + escAttr(t('pv_' + spPlace(c))) + '">' + t('st_short')[c] + '</span>').join('');
+  h += '<span></span>' + cols.map(c => {
+    const pop = s.fresh.has(c) ? ' pop' : '';
+    let b = '';
+    if (s.via0[c]) b = '<b class="st-badge minus small' + pop + '">+10 −1</b>';
+    else if (s.minus[c]) b = '<b class="st-badge minus' + pop + '">−1</b>';
+    else if (s.carryIn[c]) b = '<b class="st-badge plus' + pop + '">+1</b>';
+    return '<span class="st-b">' + b + '</span>';
+  }).join('');
+  h += '<span></span>' + cols.map(c => {
+    const d = s.top[c];
+    let inner = d === null ? '' : String(d);
+    if (d !== null && (s.minus[c] || s.via0[c]) && c <= s.col) inner = '<s>' + d + '</s><em>' + s.cur[c] + '</em>'; // shows "2" once we reach the 3 that lent 1
+    if (s.borrowed[c]) inner = '<i class="st-ten">1</i>' + inner;                                                  // the 10 it received, like ¹4
+    return '<span class="st-d top' + now(c) + '">' + inner + '</span>';
+  }).join('');
+  h += '<span class="st-op">' + (s.sub ? '−' : '+') + '</span>' + cols.map(c => '<span class="st-d bot' + now(c) + '">' + (s.bot[c] === null ? '' : s.bot[c]) + '</span>').join('');
+  h += '<span class="st-line"></span>';
+  h += '<span></span>' + cols.map(c => {
+    const v = s.ans[c];
+    let cls = 'st-d ans' + now(c), inner = '';
+    if (v !== null) { inner = v; cls += ' filled' + (c === s.justFilled ? ' pop' : '') + (s.done && c > hi ? ' lead0' : ''); }
+    else if (c === s.col) inner = '?';
+    return '<span class="' + cls + '">' + inner + '</span>';
+  }).join('');
+  return h + '</div>';
+}
+function spFrame(items, frameCls, cap, animate, startId) {
+  let h = '<div class="st-fbox"><div class="st-frame ' + frameCls + '">';
+  for (let c = 0; c < 10; c++) {
+    h += '<span class="st-cell">';
+    if (items[c]) {
+      const id = String(startId + c), on = SP.marks.has(id) ? (SP.sub ? ' x' : ' k') : '';
+      h += '<button type="button" class="st-dot ' + items[c] + on + (animate ? ' pop' : '') + '" data-st="dot" data-i="' + id + '" aria-label="' + escAttr(t('st_dot1')) + '"' +
+        (animate ? ' style="animation-delay:' + (c * 70) + 'ms"' : '') + '></button>';
+    }
+    h += '</span>';
+  }
+  return h + '</div>' + (cap ? '<span class="st-cap">' + escHtml(cap) + '</span>' : '') + '</div>';
+}
+function spCountText() {
+  const i = SP.col;
+  if (SP.sub) return spB(i) && !spNeeds(i) ? t('st_crossed', { x: SP.marks.size, b: spB(i) }) : '';
+  return SP.marks.size ? t('st_counted', { x: SP.marks.size }) : '';
+}
+function spWork() {
+  const s = SP, i = s.col;
+  if (s.done) return '<div class="st-msg good" id="stMsg">' + escHtml(s.msg) + '</div>';
+  const need = spNeeds(i);
+  let eq, dots = '';
+  if (s.sub) {
+    eq = '<span class="c-a">' + spTopVal(i) + '</span> − ' + spB(i) + ' = ?';
+    if (s.borrowed[i]) dots += spFrame(Array(10).fill('l'), 'lent', t('st_lent'), s.anim === 'open', 100);
+    dots += spFrame(Array(s.cur[i]).fill('a'), '', t('st_here', { n: s.cur[i] }), s.anim === 'col', 0);
+  } else {
+    const parts = [];
+    if (s.top[i] !== null) parts.push('<span class="c-a">' + s.top[i] + '</span>');
+    if (s.bot[i] !== null) parts.push('<span class="c-b">' + s.bot[i] + '</span>');
+    if (s.carryIn[i]) parts.push('<span class="c-c">1</span>');
+    eq = parts.join(' + ') + (s.carried[i] ? ' = 10 + ?' : ' = ?');
+    const items = [...Array(s.top[i] || 0).fill('a'), ...Array(spB(i)).fill('b'), ...Array(s.carryIn[i]).fill('c')];
+    if (!s.carried[i]) dots += spFrame(items.slice(0, 10), items.length >= 10 ? 'full' : '', '', s.anim === 'col', 0);
+    else if (s.anim === 'fly') dots += spFrame(items.slice(0, 10), 'fly', '', false, 0);
+    if (items.length > 10 || s.carried[i]) dots += spFrame(items.slice(10), '', '', s.anim === 'col', 10);
+  }
+  const used = s.sub ? s.borrowed[i] : s.carried[i];
+  const swap = '<button type="button" class="st-swap ' + (s.sub ? 'minus' : 'plus') + (need ? ' hint' : '') + '" data-st="swap"' + (used ? ' disabled' : '') + '>' +
+    (s.sub ? '−1' : '+1') + '<small>' + escHtml(t(s.sub ? 'st_borrow' : 'st_carry')) + '</small></button>';
+  let pad = '';
+  for (let d = 0; d <= 9; d++) pad += '<button type="button" data-st="d" data-v="' + d + '">' + d + '</button>';
+  return '<div class="st-title">' + escHtml(t('st_col', { name: t('pvw_' + spPlace(i))[1] })) + '</div>' +
+    '<div class="st-eq">' + eq + '</div>' +
+    '<div class="st-dots">' + dots + '</div>' +
+    '<div class="st-count" id="stCount">' + escHtml(spCountText()) + '</div>' +
+    '<div class="st-tools">' + swap + '</div>' +
+    '<div class="st-msg ' + s.kind + '" id="stMsg">' + escHtml(s.msg) + '</div>' +
+    '<div class="st-padlabel">' + escHtml(t('st_pad')) + '</div>' +
+    '<div class="st-pad' + (need ? ' wait' : '') + '">' + pad + '</div>';
+}
+function spRender() {
+  const box = $('stBox');
+  if (!box) return;
+  box.innerHTML = spGrid() + '<div class="st-work">' + spWork() + '</div>';
+  if (SP.anim === 'fly') setTimeout(() => { const f = box.querySelector('.st-frame.fly'); if (f) f.parentElement.remove(); }, 800);
+  SP.anim = ''; SP.fresh = new Set(); SP.justFilled = -1;
+}
+function spSay(msg, kind, talk) {
+  SP.msg = msg; SP.kind = kind || '';
+  const el = $('stMsg');
+  if (el) { el.className = 'st-msg ' + SP.kind; el.textContent = msg; }
+  if (talk !== false) speak(sayable(msg));
+}
+function spSwap() {
+  const i = SP.col;
+  if (!spNeeds(i)) { spSay(SP.sub ? t('st_no_borrow', { a: SP.cur[i], b: spB(i) }) : t('st_no_carry'), 'soft'); return; }
+  SP.marks = new Set();
+  if (SP.sub) {
+    const j = spDoBorrow(i);
+    SP.anim = 'open';
+    SP.msg = t(j > i + 1 ? 'st_borrow_zero' : 'st_borrowed', { a: spTopVal(i), b: spB(i) }) + ' ' + (spB(i) ? t('st_sub_ok', { bp: nDots(spB(i)) }) : t('st_sub_zero'));
+  } else {
+    spDoCarry(i);
+    SP.anim = 'fly';
+    SP.msg = t('st_carried');
+  }
+  SP.kind = '';
+  playTone(440, 0.1); setTimeout(() => playTone(587, 0.12), 110);
+  spRender();
+  speak(sayable(SP.msg));
+}
+function spPick(d, btn) {
+  const i = SP.col;
+  if (spNeeds(i)) { spSay(t(SP.sub ? 'st_first_sub' : 'st_first_add'), 'soft'); return; }
+  if (d !== spTarget(i)) {
+    btn.classList.add('no'); setTimeout(() => btn.classList.remove('no'), 450);
+    playTone(220, 0.12);
+    spSay(t(SP.sub ? 'st_wrong_sub' : 'st_wrong_add'), 'soft');
+    return;
+  }
+  SP.ans[i] = d; SP.justFilled = i; SP.col++; SP.marks = new Set();
+  playTone(523, 0.1); setTimeout(() => playTone(659, 0.12), 100);
+  if (SP.col >= SP.len) {
+    SP.done = true; SP.kind = 'good';
+    SP.msg = SP.demo ? t('st_demo_end', { eq: fmtNum(SP.a) + (SP.sub ? ' − ' : ' + ') + fmtNum(SP.b) + ' = ' + fmtNum(SP.res) }) : t('st_done', { n: fmtNum(SP.res) });
+    spRender(); speak(sayable(SP.msg)); return;
+  }
+  spIntro(); SP.anim = 'col';
+  spRender(); speak(sayable(SP.msg));
+}
+function spMark(el) {
+  const i = SP.col, id = el.dataset.i;
+  if (SP.sub) {
+    if (spNeeds(i)) { spSay(t('st_first_sub'), 'soft'); return; }
+    const b = spB(i);
+    if (!b) { spSay(t('st_sub_zero'), 'soft'); return; }
+    if (SP.marks.has(id)) SP.marks.delete(id);
+    else if (SP.marks.size >= b) { spSay(t('st_cross_max', { bp: nDots(b) }), 'soft'); return; }
+    else SP.marks.add(id);
+    el.classList.toggle('x', SP.marks.has(id));
+    if (SP.marks.size === b) spSay(t('st_crossed_done'), 'good', false);
+  } else {
+    if (SP.marks.has(id)) SP.marks.delete(id); else SP.marks.add(id);
+    el.classList.toggle('k', SP.marks.has(id));
+  }
+  $('stCount').textContent = spCountText();
+  playTone(300 + SP.marks.size * 25, 0.05);
+}
+/* the place-value blocks (as before) or the step-by-step helper, with a switch on top */
+function mountColumnVisual() {
+  if (SP && SP.demo) { stopDemo(); SP = realSP; }
+  const sw = '<div class="st-switch">' + ['blocks', 'steps'].map(v =>
+    '<button type="button" data-st="view" data-v="' + v + '" class="' + ((v === 'steps') === stepOn ? 'on' : '') + '">' + escHtml(t('st_view_' + v)) + '</button>').join('') +
+    '<button type="button" class="st-demo" data-st="demo">' + escHtml(t('st_demo_btn')) + '</button></div>';
+  if (!stepOn) { $('visual').innerHTML = sw + placeRows(current.a, current.b, mode === 'addition' ? '+' : '−', colResult); return; }
+  if (!SP || SP.q !== current) spStart(current.a, current.b, mode === 'subtraction', answer);
+  if (colResult !== undefined) { if (!SP.done) spSolveAll(); SP.msg = '✓ ' + eqText(); SP.kind = 'good'; }
+  $('visual').innerHTML = sw + '<div class="st-wrap" id="stBox"></div>';
+  spRender();
+}
+
+/* ---------------- Example: the helper solves a problem by itself, slowly ----------------
+   Always a problem that needs −1 / +1 (1234 − 1156 = 78, and 3468 + 2357 = 5825).
+   A little hand shows each button before it is pressed; the voice reads each step. */
+const DEMO = { subtraction: [1234, 1156], addition: [3468, 2357] };
+let demoRun = 0, demoTimer = null, realSP = null;
+function stopDemo() { demoRun++; clearTimeout(demoTimer); }
+const demoWait = ms => new Promise(r => { demoTimer = setTimeout(r, ms); });
+async function spDemo() {
+  stopDemo();
+  const run = demoRun;
+  if (!SP || !SP.demo) realSP = SP;
+  const [a, b] = DEMO[mode], sub = mode === 'subtraction';
+  spStart(a, b, sub, sub ? a - b : a + b);
+  SP.demo = true; SP.q = null;
+  $('visual').innerHTML = '<div class="st-switch"><span class="st-demo-tag">' + escHtml(t('st_demo_tag')) + '</span>' +
+    '<button type="button" data-st="demo-back">' + escHtml(t('st_demo_back')) + '</button>' +
+    '<button type="button" class="st-demo" data-st="demo">' + escHtml(t('st_demo_again')) + '</button></div>' +
+    '<div class="st-wrap demo" id="stBox"></div>';
+  spRender(); speak(sayable(SP.msg));
+  const alive = () => run === demoRun;
+  // wait until the voice has finished (or long enough to read), then a short breath
+  const pause = async (text, min) => {
+    await demoWait(min || 1400);
+    if (sound && window.speechSynthesis) { let guard = 0; while (alive() && speechSynthesis.speaking && guard++ < 80) await demoWait(250); }
+    else await demoWait(Math.max(0, String(text || '').length * 55 - (min || 1400)));
+    await demoWait(500);
+    return alive();
+  };
+  const press = async sel => {
+    const el = $('stBox') && $('stBox').querySelector(sel);
+    if (!el || !alive()) return null;
+    el.classList.add('demo-press');
+    await demoWait(900);
+    if (!alive()) return null;
+    el.classList.remove('demo-press');
+    return el;
+  };
+  if (!await pause(SP.msg)) return;
+  while (alive() && !SP.done) {
+    const i = SP.col;
+    if (spNeeds(i)) {
+      if (!await press('[data-st="swap"]')) return;
+      spSwap();
+      if (!await pause(SP.msg, 1800)) return;
+    }
+    if (SP.sub && spB(i)) {                     // cross out: first the dots of this column, then from the 10
+      const dots = [...$('stBox').querySelectorAll('.st-dot.a')].reverse().concat([...$('stBox').querySelectorAll('.st-dot.l')].reverse());
+      for (let k = 0; k < spB(i) && alive(); k++) { spMark(dots[k]); await demoWait(450); }
+    } else if (!SP.sub) {                       // count the dots one by one
+      const dots = [...$('stBox').querySelectorAll('.st-dot')].filter(d => !d.closest('.fly'));
+      for (const d of dots) { if (!alive()) return; spMark(d); await demoWait(380); }
+    }
+    if (!await pause('', 1000)) return;
+    const d = spTarget(i), btn = await press('[data-st="d"][data-v="' + d + '"]');
+    if (!btn) return;
+    spPick(d, btn);
+    if (!await pause(SP.msg, 1600)) return;
+  }
+}
+
 /* ---------------- Choices: wrong options come from REAL mistakes ---------------- */
 function buildChoices() {
   const ans = answer, a = current.a, b = current.b;
@@ -1280,7 +1697,7 @@ function handleCorrect(button) {
   } else {
     const isCol = (mode === 'addition' || mode === 'subtraction') && level >= SMALL_LEVELS;
     if (isCol) {
-      $('visual').innerHTML = placeRows(current.a, current.b, mode === 'addition' ? '+' : '−', answer);
+      colResult = answer; mountColumnVisual(); // shows the finished columns
       $('leftBlocks').innerHTML = buildMiniColumn(current.a, current.b, mode === 'addition' ? '+' : '−', answer);
       animateBlocks($('rightBlocks'), answer).then(finish);
     } else {
@@ -1390,6 +1807,24 @@ $('soundBtn').addEventListener('click', () => {
   applyLang();
 });
 $('hearBtn').addEventListener('click', () => { const was = sound; sound = true; speakQuestion(); sound = was; });
+$('visual').addEventListener('click', e => {
+  const el = e.target.closest('[data-st]');
+  if (!el) return;
+  const k = el.dataset.st;
+  if (k === 'view') {
+    stepOn = el.dataset.v === 'steps'; LS.set('stepByStep', stepOn);
+    if (SP && SP.q === current) SP.anim = 'col';
+    mountColumnVisual();
+    if (stepOn && SP && !SP.done) speak(sayable(SP.msg));
+    return;
+  }
+  if (k === 'demo') { spDemo(); return; }
+  if (k === 'demo-back') { mountColumnVisual(); return; }
+  if (!SP || SP.done || SP.demo) return;   // during the example, the helper plays by itself
+  if (k === 'swap') spSwap();
+  else if (k === 'd') spPick(Number(el.dataset.v), el);
+  else if (k === 'dot') spMark(el);
+});
 $('nextBtn').addEventListener('click', nextQuestion);
 $('bigKitten').addEventListener('click', closeBigKitten);
 $('backBtn').addEventListener('click', showStart);
