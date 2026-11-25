@@ -439,6 +439,9 @@ button{font:inherit;color:inherit;border:0;cursor:pointer;font-family:"Fredoka",
 .st-title{font-size:11px;font-weight:900;color:var(--muted);text-transform:uppercase;letter-spacing:1px}
 .st-eq{font-family:"Fredoka",sans-serif;font-size:30px;font-weight:600;line-height:1}
 .st-eq .c-a{color:var(--coral)}.st-eq .c-b{color:#2c86b8}.st-eq .c-c{color:#d48a12}.st-eq .c-l{color:#2c86b8}
+.st-split{font-size:15px;font-weight:800;color:#b97716;background:#fff1dc;border-radius:12px;padding:6px 12px;text-align:center;max-width:460px}
+.st-dots.stack{flex-direction:column;align-items:center;gap:6px}
+.st-frame.sent{opacity:.45;border-style:dashed}
 .st-dots{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;align-items:flex-start}
 .st-fbox{display:flex;flex-direction:column;align-items:center;gap:4px}
 .st-frame{display:grid;grid-template-columns:repeat(5,28px);grid-template-rows:repeat(2,28px);gap:4px;padding:6px;border:3px solid #d9cdb8;border-radius:12px;background:#fff}
@@ -656,10 +659,11 @@ const STR = {
     st_no_borrow: 'Pas besoin d\'emprunter : {a} est assez grand pour enlever {b}.',
     st_was: 'Le {o} a prêté 1 : il devient {n}.', st_was0: 'Le 0 a emprunté, puis prêté : il devient 9.',
     st_add_ok: 'Compte tous les points : combien y en a-t-il?',
-    st_add_full: 'Un cadre de 10 est plein! Touche +1 pour envoyer ces 10 points au voisin de gauche.',
-    st_carried: 'Les 10 points sont partis chez le voisin : il a maintenant +1. Combien de points restent ici?',
+    st_add_full: 'Le cadre de 10 est plein, et il reste {r} en dessous. Touche +1 pour envoyer le 10 au voisin de gauche.',
+    st_carried: 'Le voisin a maintenant +1. Quel chiffre écris-tu ici?',
+    st_split: 'Le 10 devient +1 chez le voisin. Le {r} reste ici.', st_sent: '10 → +1 au voisin',
     st_no_carry: 'Pas besoin : il y a moins de 10 points ici.',
-    st_first_sub: 'D\'abord, touche −1 pour emprunter 10 points.', st_first_add: 'D\'abord, touche +1 pour envoyer les 10 points au voisin.',
+    st_first_sub: 'D\'abord, touche −1 pour emprunter 10 points.', st_first_add: 'D\'abord, touche +1 pour envoyer le 10 au voisin.',
     st_wrong_sub: 'Pas tout à fait. Compte les points qui ne sont pas barrés.',
     st_wrong_add: 'Pas tout à fait. Touche chaque point pour le compter, doucement.',
     st_cross_max: 'Tu as déjà barré {bp}. Touche un point barré pour le remettre.',
@@ -727,10 +731,11 @@ const STR = {
     st_no_borrow: 'No need to borrow: {a} is big enough to take away {b}.',
     st_was: 'The {o} lent 1, so it becomes {n}.', st_was0: 'The 0 borrowed, then lent: it becomes 9.',
     st_add_ok: 'Count all the dots: how many are there?',
-    st_add_full: 'A frame of 10 is full! Tap +1 to send those 10 dots to the neighbour on the left.',
-    st_carried: 'The 10 dots went to the neighbour: it now has +1. How many dots are left here?',
+    st_add_full: 'The frame of 10 is full, with {r} more underneath. Tap +1 to send the 10 to the neighbour on the left.',
+    st_carried: 'The neighbour now has +1. Which digit do you write here?',
+    st_split: 'The 10 becomes +1 at the neighbour. The {r} stays here.', st_sent: '10 → +1 to the neighbour',
     st_no_carry: 'No need: there are fewer than 10 dots here.',
-    st_first_sub: 'First, tap −1 to borrow 10 dots.', st_first_add: 'First, tap +1 to send the 10 dots to the neighbour.',
+    st_first_sub: 'First, tap −1 to borrow 10 dots.', st_first_add: 'First, tap +1 to send the 10 to the neighbour.',
     st_wrong_sub: 'Not quite. Count the dots that are not crossed out.',
     st_wrong_add: 'Not quite. Tap each dot to count it, slowly.',
     st_cross_max: 'You already crossed out {bp}. Tap a crossed dot to bring it back.',
@@ -1320,7 +1325,8 @@ function buildMiniColumn(a, b, op, result) {
    On the next column the 3 shows as 2 (it lent 1), and so on. A 0 that has nothing to lend
    borrows from its own neighbour first and becomes 9.
    Addition (ex. 58 + 67): when a column has 10 dots or more, a frame of 10 fills up. The kid
-   taps +1: those 10 dots fly to the neighbour as a "+1", and the kid counts what is left.
+   taps +1: a "+1" appears above the neighbour, the full 10 is marked as sent, and the dots
+   left underneath (8 + 7 = 10 + 5) give the digit to write.
    No timer, no penalty: a wrong digit only gets a gentle tip. */
 let stepOn = LS.get('stepByStep', false);
 let SP = null, colResult;
@@ -1347,7 +1353,7 @@ function spIntro() {
   const i = SP.col;
   let m;
   if (SP.sub) m = spNeeds(i) ? t('st_sub_need', { a: SP.cur[i], b: spB(i) }) : spB(i) === 0 ? t('st_sub_zero') : t('st_sub_ok', { bp: nDots(spB(i)) });
-  else m = spNeeds(i) ? t('st_add_full') : t('st_add_ok');
+  else m = spNeeds(i) ? t('st_add_full', { r: spSum(i) - 10 }) : t('st_add_ok');
   if (SP.via0[i]) m = t('st_was0') + ' ' + m;
   else if (SP.minus[i]) m = t('st_was', { o: SP.top[i], n: SP.cur[i] }) + ' ' + m;
   SP.msg = m; SP.kind = '';
@@ -1428,7 +1434,7 @@ function spWork() {
   const s = SP, i = s.col;
   if (s.done) return '<div class="st-msg good" id="stMsg">' + escHtml(s.msg) + '</div>';
   const need = spNeeds(i);
-  let eq, dots = '';
+  let eq, dots = '', stack = false;
   if (s.sub) {
     eq = '<span class="c-a">' + spTopVal(i) + '</span> − ' + spB(i) + ' = ?';
     if (s.borrowed[i]) dots += spFrame(Array(10).fill('l'), 'lent', t('st_lent'), s.anim === 'open', 100);
@@ -1438,20 +1444,22 @@ function spWork() {
     if (s.top[i] !== null) parts.push('<span class="c-a">' + s.top[i] + '</span>');
     if (s.bot[i] !== null) parts.push('<span class="c-b">' + s.bot[i] + '</span>');
     if (s.carryIn[i]) parts.push('<span class="c-c">1</span>');
-    eq = parts.join(' + ') + (s.carried[i] ? ' = 10 + ?' : ' = ?');
+    const big = spSum(i) >= 10; stack = big;   // 8 + 7 = 10 + 5: a full frame of 10, and 5 underneath
+    eq = parts.join(' + ') + ' = ' + (big ? '<span class="c-c">10</span> + ' + (spSum(i) - 10) : '?');
     const items = [...Array(s.top[i] || 0).fill('a'), ...Array(spB(i)).fill('b'), ...Array(s.carryIn[i]).fill('c')];
-    if (!s.carried[i]) dots += spFrame(items.slice(0, 10), items.length >= 10 ? 'full' : '', '', s.anim === 'col', 0);
-    else if (s.anim === 'fly') dots += spFrame(items.slice(0, 10), 'fly', '', false, 0);
-    if (items.length > 10 || s.carried[i]) dots += spFrame(items.slice(10), '', '', s.anim === 'col', 10);
+    // the full 10 stays on top (after +1 it is marked as sent to the neighbour), the rest sits underneath
+    dots += spFrame(items.slice(0, 10), big ? (s.carried[i] ? 'full sent' : 'full') : '', big ? (s.carried[i] ? t('st_sent') : '10') : '', s.anim === 'col', 0);
+    if (big) dots += spFrame(items.slice(10), '', String(spSum(i) - 10), s.anim === 'col', 10);
   }
   const used = s.sub ? s.borrowed[i] : s.carried[i];
   const swap = '<button type="button" class="st-swap ' + (s.sub ? 'minus' : 'plus') + (need ? ' hint' : '') + '" data-st="swap"' + (used ? ' disabled' : '') + '>' +
     (s.sub ? '−1' : '+1') + '<small>' + escHtml(t(s.sub ? 'st_borrow' : 'st_carry')) + '</small></button>';
   let pad = '';
   for (let d = 0; d <= 9; d++) pad += '<button type="button" data-st="d" data-v="' + d + '">' + d + '</button>';
+  const split = !s.sub && s.carried[i] ? '<div class="st-split">' + escHtml(t('st_split', { r: spSum(i) - 10 })) + '</div>' : '';
   return '<div class="st-title">' + escHtml(t('st_col', { name: t('pvw_' + spPlace(i))[1] })) + '</div>' +
-    '<div class="st-eq">' + eq + '</div>' +
-    '<div class="st-dots">' + dots + '</div>' +
+    '<div class="st-eq">' + eq + '</div>' + split +
+    '<div class="st-dots' + (stack ? ' stack' : '') + '">' + dots + '</div>' +
     '<div class="st-count" id="stCount">' + escHtml(spCountText()) + '</div>' +
     '<div class="st-tools">' + swap + '</div>' +
     '<div class="st-msg ' + s.kind + '" id="stMsg">' + escHtml(s.msg) + '</div>' +
@@ -1481,7 +1489,7 @@ function spSwap() {
     SP.msg = t(j > i + 1 ? 'st_borrow_zero' : 'st_borrowed', { a: spTopVal(i), b: spB(i) }) + ' ' + (spB(i) ? t('st_sub_ok', { bp: nDots(spB(i)) }) : t('st_sub_zero'));
   } else {
     spDoCarry(i);
-    SP.anim = 'fly';
+    SP.anim = '';
     SP.msg = t('st_carried');
   }
   SP.kind = '';
@@ -1588,7 +1596,7 @@ async function spDemo() {
       const dots = [...$('stBox').querySelectorAll('.st-dot.a')].reverse().concat([...$('stBox').querySelectorAll('.st-dot.l')].reverse());
       for (let k = 0; k < spB(i) && alive(); k++) { spMark(dots[k]); await demoWait(450); }
     } else if (!SP.sub) {                       // count the dots one by one
-      const dots = [...$('stBox').querySelectorAll('.st-dot')].filter(d => !d.closest('.fly'));
+      const dots = [...$('stBox').querySelectorAll('.st-dot')].filter(d => !d.closest('.sent'));
       for (const d of dots) { if (!alive()) return; spMark(d); await demoWait(380); }
     }
     if (!await pause('', 1000)) return;
